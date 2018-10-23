@@ -4,7 +4,7 @@
 문제 목록
 
 1. 음계 - [링크](https://boj.kr/2920)
-  - 풀이 [problem/2920](https://github.com/duskan/baekjoon/tree/master/problem/2920)
+  - 풀이 [problem/2920]
 2. 최대공약수와 최소공배수 - [링크](https://boj.kr/2609)
   - 풀이 [problem/2609](https://github.com/duskan/baekjoon/tree/master/problem/2609)
 3. 하노이 탑 - [링크](https://boj.kr/1914)
