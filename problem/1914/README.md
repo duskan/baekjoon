@@ -2,7 +2,7 @@
 
 이 문제는  Stack(Recursive call)과 DP 두개 다 사용해야하는 문제이다.
 
-## 이동횟수 구하기 (DP문제)
+## 하노이 탑 (DP문제, 재귀함수)
 
 1 개일떄는 당연히 이동횟수가 1이다. 2개 일때 이동횟수를 구해보자.
 ```
@@ -110,7 +110,7 @@ count_hanoi(n) = 2 * count_honoi(n-1) + 1
 count_hanoi(n) = 2 * count_honoi(n-1) + 1
 ````
 
-와 같이 간단한 형태의 점화식은 쉽게 아래방법으로 다항식으로 바꿀수 있다. (설명을 위해 식을 전개한다)
+와 같이 간단한 형태의 점화식은 쉽게 아래와 같이 식을 전개해보므로써 다항식으로 바꿀수 있다.
 
 ```
 count_hanoi(n) = 2 * count_honoi(n-1) + 1
@@ -119,14 +119,97 @@ count_hanoi(n) = 2 * count_honoi(n-1) + 1
                = ...
                = 2 * (2 * (2 * ... (2 * (2 * count_honoi(1) + 1) +1) ... + 1) + 1 ) + 1  # count_honoi(1) 은 1이다.
                = 2 * 2 * 2 * ... (2 * (2 * 1 + 1) + 1) ... + 1) + 1 ) + 1   
-               = 2 * 2 * 2 * ... 2 * 2 * 1 +  2^(n-1) + 2^(n-2) ...  + 4 + 2 + 1
-               = 2^n +  2^(n-1) + 2^(n-2) ...  + 4 + 2 + 1
+               = 2 * 2 * 2 * ... 2 * 2 * 1 +  2^(n-2) + 2^(n-3) ...  + 4 + 2 + 1
+               = 2^(n-1) + 2^(n-2) + 2^(n-3) ...  + 4 + 2 + 1
 ````
 
 또한 2의 지수승은 그 특징으로 인해 다음과 같이 간단히 바꿔진다.
 ```
-count_hanoi(n) = 2^n +  2^(n-1) + 2^(n-2) ...  + 4 + 2 + 1
-               = 2^(n+1) - 1
+count_hanoi(n) = 2^(n-1) + 2^(n-2) ...  + 4 + 2 + 1
+               = 2^n - 1
 ````
 
 단 여기선 DP를 연습하는 측면에서 위와 같이 _*문제로 부터 점화식 도출 -> DP 알고리즘 도출*_ 과정을 거쳤다.
+
+### Source code
+
+#### 이동 횟수 구하기 (DP)
+
+DP 문제로 아래와 같이 간단하게 코드를 작성 할 수 있다.
+
+```
+def count_hanoi(N):
+    count_list = [0 for i in range(N)]  # 0-indexing
+    count_list[0] = 1
+
+    for i in range(1, N):
+        count_list[i] = 2 * count_list[i-1] + 1
+
+    return count_list[-1]
+```
+
+하지만 앞서 Tips에서 이야기했듯이. 간단하게 결론을 도출할 수 있으므로 나는 이렇게 코드를 작성하였다.
+
+```
+def count_hanoi(N):
+    return int(pow(2, N) - 1)
+```
+
+#### 블럭의 경로 출력하기 (재귀)
+
+블럭의 개수 같은경우 앞서 설명했던
+
+```
+move_hanoi(3, a, c) = move_hanoi(2, a, b)\    # 3번 블럭을 제외한 블럭을 b로 이동
+                      + 1\                    # 3번 블럭을 c로이동
+                      + move_hanoi(2, b, c)   # b에 옮겨둔 블럭을 다시 c로 이동
+```
+
+이부분을 코드로 변경하면 정말 간단히 해결 할 수 있다.
+```
+def run_hanoi(N, a, b, c):
+    # a = 1, b = 2, c = 3
+
+    if N == 0:  # 재귀가 종료되는 시점이 있어야 한다.
+        return
+
+    run_hanoi(N-1, a, c, b)
+    print(a, c)
+    run_hanoi(N-1, b, a, c)
+```
+
+즉 전체 소스코드는 아래와 같다.
+
+```
+import sys
+import math
+
+
+def run_hanoi(N, a, b, c):
+    # a = 1, b = 2, c = 3
+
+    if N == 0:  # 재귀가 종료되는 시점이 있어야 한다.
+        return
+
+    run_hanoi(N-1, a, c, b)
+    print(a, c)
+    run_hanoi(N-1, b, a, c)
+
+
+def count_hanoi(N):
+    return int(math.pow(2, N) - 1)
+
+
+if __name__ == "__main__":
+
+    # input
+    line = sys.stdin.readline()
+    num_of_block = int(line)
+
+    result = count_hanoi(num_of_block)
+    print(result)
+
+    if num_of_block <= 20:
+        run_hanoi(num_of_block, 1, 2, 3)
+
+```
