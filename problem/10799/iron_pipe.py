@@ -1,3 +1,8 @@
+"""
+    # 2018-10-17
+    # Problemn link : https://www.acmicpc.net/problem/10799
+"""
+
 import sys
 
 
